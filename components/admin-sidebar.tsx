@@ -2,22 +2,37 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { X } from 'lucide-react';
 import type { UserRole } from '../lib/auth/profile';
 import { getNavigationForRole } from '../lib/auth/permissions';
 import { BrandMark } from './brand-mark';
 
 type AdminSidebarProps = {
     role: UserRole;
+    isOpen: boolean;
+    onClose: () => void;
 };
 
-export function AdminSidebar({ role }: AdminSidebarProps) {
+export function AdminSidebar({ role, isOpen, onClose }: AdminSidebarProps) {
     const pathname = usePathname();
     const navigation = getNavigationForRole(role);
 
     return (
-        <aside className="hidden w-64 shrink-0 flex-col bg-[#071b47] px-4 py-6 text-blue-100 lg:flex">
-            <div className="px-3">
+        <aside
+            id="admin-navigation"
+            className={`fixed inset-y-0 left-0 z-50 flex h-screen w-64 shrink-0 flex-col bg-[#071b47] px-4 py-6 text-blue-100 shadow-2xl transition-transform duration-200 ease-out lg:static lg:z-auto lg:h-auto lg:min-h-screen lg:translate-x-0 lg:shadow-none ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
+            aria-label="Navigasi utama"
+        >
+            <div className="flex items-center justify-between px-3">
                 <BrandMark inverted />
+                <button
+                    type="button"
+                    onClick={onClose}
+                    className="grid h-10 w-10 place-items-center rounded-xl text-blue-100 hover:bg-white/10 hover:text-white lg:hidden"
+                    aria-label="Tutup navigasi"
+                >
+                    <X aria-hidden="true" className="h-5 w-5" />
+                </button>
             </div>
 
             <nav className="mt-10 min-h-0 space-y-5 overflow-y-auto text-sm font-semibold" aria-label="Navigasi utama">
@@ -33,6 +48,7 @@ export function AdminSidebar({ role }: AdminSidebarProps) {
                                         <Link
                                             key={item.href}
                                             href={item.href}
+                                            onClick={onClose}
                                             className={`flex items-center gap-3 rounded-xl px-4 py-3 ${isActive ? 'bg-white/12 text-white' : 'text-blue-200 hover:bg-white/8 hover:text-white'}`}
                                         >
                                             <Icon aria-hidden="true" className="h-[18px] w-[18px] shrink-0" strokeWidth={2} />
