@@ -13,6 +13,6 @@ export function createAdminClient() {
     const { url } = getSupabaseEnvironment();
 
     return createClient(url, serviceRoleKey, {
-        auth: { autoRefreshToken: false, persistSession: false },
+        auth: { autoRefreshToken: false, persistSession: false }, 
     });
 }
